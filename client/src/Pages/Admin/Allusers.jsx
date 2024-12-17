@@ -61,7 +61,6 @@ function Allusers() {
         </button>
       </div>
 
-      {/* Tab Content */}
       {loading ? (
         <p className="text-center text-gray-500 font-medium">Loading...</p>
       ) : activeTab === "users" ? (
@@ -81,16 +80,16 @@ function Allusers() {
                 className="p-4 bg-white shadow rounded-lg hover:shadow-lg transition"
               >
                 <img
-                src={"/images/no-profile-picture.jpg"
-                }
-                alt="User Profile"
-                className="w-16 h-16 rounded-full mx-auto mb-2"
-              />
-
+                  src={users.profileImage || "/images/no-profile-picture.jpg"}
+                  alt="User Profile"
+                  className="w-16 h-16 rounded-full mx-auto mb-2"
+                />
                 <h3 className="text-lg font-semibold text-center">
                   {user.name}
                 </h3>
-                <p className="text-gray-500 text-sm text-center">{user.country}</p>
+                <p className="text-gray-500 text-sm text-center">
+                  {user.country}
+                </p>
                 <p className="text-gray-500 text-sm text-center">
                   {user.email}
                 </p>
@@ -122,14 +121,15 @@ function Allusers() {
               className="p-4 bg-white shadow rounded-lg hover:shadow-lg transition"
             >
               <img
-                src={"/images/no-profile-picture.jpg"
-                }
+                src={host.profileImage || "/images/no-profile-picture.jpg"}
                 alt="User Profile"
                 className="w-16 h-16 rounded-full mx-auto mb-2"
               />
 
               <h3 className="text-lg font-semibold text-center">{host.name}</h3>
-              <p className="text-gray-500 text-sm text-center">{host.country}</p>
+              <p className="text-gray-500 text-sm text-center">
+                {host.country}
+              </p>
               <p className="text-gray-500 text-sm text-center">{host.email}</p>
               <div className="flex justify-center gap-2 mt-4">
                 <button className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">

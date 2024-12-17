@@ -164,7 +164,7 @@ const AdminNavbar = () => {
                 Home
               </NavLink>
               <NavLink
-                to="/admin/all-users"
+                to="/all-users"
                 onClick={closeSidebar}
                 className={({ isActive }) =>
                   `flex items-center gap-4 p-3 rounded-xl ${isActive ? "bg-blue-600 text-white" : ""}`
