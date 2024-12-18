@@ -8,12 +8,12 @@ function Allusers() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchdata = async () => {
+    const fetchData = async () => {
       try {
         const userResp = await axios.get("http://localhost:5000/api/get-user");
         setUsers(Array.isArray(userResp.data) ? userResp.data : []);
 
-        const hostResp = await axios.get("http://localhost:5000/api/get-user");
+        const hostResp = await axios.get("http://localhost:5000/api/get-host");
         setHosts(Array.isArray(hostResp.data) ? hostResp.data : []);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -23,124 +23,108 @@ function Allusers() {
         setLoading(false);
       }
     };
-    fetchdata();
+    fetchData();
   }, []);
+
+  const renderTableRows = (data) =>
+    data.map((user) => (
+      <tr
+        key={user._id}
+        className="border-b hover:bg-gray-100 transition-colors"
+      >
+        {/* Profile Picture */}
+        <td className="p-4">
+          <div className="flex items-center">
+            <img
+              src={user.profileImage || "/images/no-profile-picture.jpg"}
+              alt="Profile"
+              className="w-10 h-10 rounded-full object-cover"
+            />
+            <div className="ml-3 text-gray-800 font-medium">{user.name}</div>
+          </div>
+        </td>
+        {/* Email */}
+        <td className="p-4 text-gray-600">{user.email}</td>
+        {/* Country */}
+        <td className="p-4 text-gray-600">{user.country || "N/A"}</td>
+        {/* Action Buttons */}
+        <td className="p-4">
+          <div className="flex gap-2">
+            <button className="px-3 py-1 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600">
+              Edit
+            </button>
+            <button className="px-3 py-1 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600">
+              Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+    ));
 
   return (
     <div className="container mx-auto p-4">
+      {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl pl-3.5 pt-2 font-bold font-sans">All Users</h1>
+        <h1 className="text-xl font-bold">All Users</h1>
         <input
           type="text"
           placeholder="Search"
-          className="py-2 my-2 mr-3 px-4 rounded-lg text-center border border-gray-300 w-48"
+          className="py-2 px-4 w-64 rounded-lg border border-gray-300 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
       </div>
 
       {/* Tab Buttons */}
-      <div className="flex border-b border-gray-300 mb-4">
+      <div className="flex mb-4">
         <button
           onClick={() => setActiveTab("users")}
-          className={`py-2 px-4 text-lg font-poppins border-b-4 ${
+          className={`py-2 px-6 font-medium border-b-4 ${
             activeTab === "users"
               ? "border-purple-600 text-purple-600"
-              : "border-transparent text-gray-600"
+              : "border-transparent text-gray-600 hover:text-purple-600"
           }`}
         >
           Users
         </button>
         <button
           onClick={() => setActiveTab("hosts")}
-          className={`py-2 px-4 text-lg font-poppins border-b-4 ${
+          className={`py-2 px-6 font-medium border-b-4 ${
             activeTab === "hosts"
               ? "border-purple-600 text-purple-600"
-              : "border-transparent text-gray-600"
+              : "border-transparent text-gray-600 hover:text-purple-600"
           }`}
         >
           Hosts
         </button>
       </div>
 
+      {/* Table */}
       {loading ? (
-        <p className="text-center text-gray-500 font-medium">Loading...</p>
-      ) : activeTab === "users" ? (
-        users.length === 0 ? (
-          <div className="flex justify-center items-center h-60">
-            <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200">
-              <p className="text-lg font-bold text-gray-500 text-center">
-                You don't have any users yet
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {users.map((user) => (
-              <div
-                key={user._id}
-                className="p-4 bg-white shadow rounded-lg hover:shadow-lg transition"
-              >
-                <img
-                  src={users.profileImage || "/images/no-profile-picture.jpg"}
-                  alt="User Profile"
-                  className="w-16 h-16 rounded-full mx-auto mb-2"
-                />
-                <h3 className="text-lg font-semibold text-center">
-                  {user.name}
-                </h3>
-                <p className="text-gray-500 text-sm text-center">
-                  {user.country}
-                </p>
-                <p className="text-gray-500 text-sm text-center">
-                  {user.email}
-                </p>
-                <div className="flex justify-center gap-2 mt-4">
-                  <button className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
-                    Edit
-                  </button>
-                  <button className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600">
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )
-      ) : hosts.length === 0 ? (
-        <div className="flex justify-center items-center h-60">
-          <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200">
-            <p className="text-lg font-bold text-gray-500 text-center">
-              You don't have any hosts yet
-            </p>
-          </div>
-        </div>
+        <p className="text-center text-gray-500">Loading...</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {hosts.map((host) => (
-            <div
-              key={host._id}
-              className="p-4 bg-white shadow rounded-lg hover:shadow-lg transition"
-            >
-              <img
-                src={host.profileImage || "/images/no-profile-picture.jpg"}
-                alt="User Profile"
-                className="w-16 h-16 rounded-full mx-auto mb-2"
-              />
-
-              <h3 className="text-lg font-semibold text-center">{host.name}</h3>
-              <p className="text-gray-500 text-sm text-center">
-                {host.country}
-              </p>
-              <p className="text-gray-500 text-sm text-center">{host.email}</p>
-              <div className="flex justify-center gap-2 mt-4">
-                <button className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
-                  Edit
-                </button>
-                <button className="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600">
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+            <thead>
+              <tr className="bg-purple-600 text-white">
+                <th className="p-4 text-left">Profile</th>
+                <th className="p-4 text-left">Email</th>
+                <th className="p-4 text-left">Country</th>
+                <th className="p-4 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activeTab === "users" && users.length > 0
+                ? renderTableRows(users)
+                : activeTab === "hosts" && hosts.length > 0
+                ? renderTableRows(hosts)
+                : (
+                  <tr>
+                    <td colSpan="4" className="p-4 text-center text-gray-500">
+                      No data available
+                    </td>
+                  </tr>
+                )}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

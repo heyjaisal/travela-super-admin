@@ -172,3 +172,13 @@ exports.Getuser = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+exports.Gethost = async (req, res) => {
+  try {
+    const users = await User.find({ role: "host" });
+    res.json(users);
+  } catch (error) {
+    console.error("Error fetching admins:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
